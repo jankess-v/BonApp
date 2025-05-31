@@ -1,0 +1,1 @@
+Projekt z przedmiotu Szkielety programistyczne w Aplikacjach Internetowych
