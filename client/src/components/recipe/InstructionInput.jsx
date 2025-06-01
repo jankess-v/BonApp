@@ -1,6 +1,6 @@
 "use client"
 
-import { Plus, X, GripVertical } from "lucide-react"
+import {Plus, X, GripVertical, ArrowUp} from "lucide-react"
 
 const InstructionInput = ({ instructions, onChange }) => {
     const addInstruction = () => {
@@ -30,7 +30,7 @@ const InstructionInput = ({ instructions, onChange }) => {
                 <button
                     type="button"
                     onClick={addInstruction}
-                    className="flex items-center text-sm text-gray-600 hover:text-gray-900 transition-colors"
+                    className="flex items-center text-sm text-indigo-600 hover:text-indigo-700 transition-colors cursor-pointer"
                 >
                     <Plus className="w-4 h-4 mr-1" />
                     Dodaj krok
@@ -50,44 +50,52 @@ const InstructionInput = ({ instructions, onChange }) => {
                 value={instruction}
                 onChange={(e) => updateInstruction(index, e.target.value)}
                 placeholder={`Krok ${index + 1}: Opisz co należy zrobić...`}
-                rows={3}
-                className="input-field resize-none"
+                rows={1}
+                className="block w-full pl-10 pr-3 py-2 border rounded-md focus:outline-none placeholder:text-gray-500 text-black border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 resize-none"
             />
                     </div>
 
-                    {/* Przyciski akcji */}
-                    <div className="flex flex-col space-y-1 mt-2">
-                        {/* Przycisk usuwania */}
-                        <button
-                            type="button"
-                            onClick={() => removeInstruction(index)}
-                            className="p-1 text-gray-400 hover:text-red-500 transition-colors"
-                        >
-                            <X className="w-4 h-4" />
-                        </button>
-
-                        {/* Przyciski przesuwania */}
+                    {/* Przyciski akcji - teraz w jednej linii */}
+                    <div className="flex items-center space-x-1 mt-2">
+                        {/* Przesuń w górę */}
                         {index > 0 && (
                             <button
                                 type="button"
-                                onClick={() => moveInstruction(index, index - 1)}
+                                onClick={() => {
+                                    const updatedInstructions = [...instructions];
+                                    [updatedInstructions[index], updatedInstructions[index - 1]] = [
+                                        updatedInstructions[index - 1],
+                                        updatedInstructions[index]
+                                    ];
+                                    onChange(updatedInstructions);
+                                }}
                                 className="p-1 text-gray-400 hover:text-gray-600 transition-colors"
                                 title="Przesuń w górę"
                             >
-                                <GripVertical className="w-4 h-4 rotate-90" />
+                                <ArrowUp className="w-4 h-4 cursor-pointer" />
                             </button>
                         )}
+
+                        {/* Usuń krok */}
+                        <button
+                            type="button"
+                            onClick={() => removeInstruction(index)}
+                            className="p-1 text-gray-400 hover:text-red-500 transition-colors cursor-pointer"
+                            title="Usuń krok"
+                        >
+                            <X className="w-4 h-4" />
+                        </button>
                     </div>
                 </div>
             ))}
 
             {instructions.length === 0 && (
                 <div className="text-center py-8 text-gray-500">
-                    <p>Brak instrukcji. Kliknij "Dodaj krok" aby rozpocząć.</p>
+                    <p>Brak instrukcji. Kliknij "Dodaj krok", aby rozpocząć.</p>
                 </div>
             )}
         </div>
-    )
+    );
 }
 
 export default InstructionInput
