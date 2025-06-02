@@ -1,14 +1,14 @@
-import { useState, useEffect } from "react"
-import { useParams, useNavigate } from "react-router-dom"
-import { Edit, Share2, Trash2, Clock, Users, Utensils, Flame } from "lucide-react"
-import { recipeAPI } from "../services/recipeAPI"
+import {useState, useEffect} from "react"
+import {useParams, useNavigate, Link} from "react-router-dom"
+import {Edit, Trash2, Clock, Users, Utensils, Flame, ArrowLeft} from "lucide-react"
+import {recipeAPI} from "../services/recipeAPI"
 
 import Navbar from "../components/Navbar.jsx";
 
 const RecipeDetail = () => {
     const [recipe, setRecipe] = useState(null)
     const [loading, setLoading] = useState(true)
-    const { id } = useParams()
+    const {id} = useParams()
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -44,7 +44,7 @@ const RecipeDetail = () => {
     }
     let isAuthor = false;
     const user = localStorage.getItem("user");
-    if(user) {
+    if (user) {
         const parsedUser = JSON.parse(user);
         isAuthor = parsedUser._id === recipe.authorId._id;
     }
@@ -61,25 +61,30 @@ const RecipeDetail = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50">
-            <Navbar />
-            <div className="max-w-5xl mx-auto bg-white shadow-xl rounded-xl p-8 border border-gray-200 mt-16 pt-12 pb-8 px-6 md:px-8">
+        <div className="min-h-screen bg-gray-50 mb-8">
+            <Navbar/>
+            <div
+                className="max-w-5xl mx-auto bg-white shadow-xl rounded-xl p-8 border border-gray-200 mt-16 pt-12 pb-8 px-6 md:px-8">
                 {/* Header */}
                 <div className="flex flex-col md:flex-row justify-between items-start mb-8">
-                    <h1 className="text-4xl font-bold text-gray-900 mb-4 md:mb-0">{recipe.title}</h1>
-
+                    <div className="flex items-center space-x-4 mb-4 md:mb-0">
+                        <Link to="/recipes" className="text-gray-500 hover:text-gray-700 transition-colors duration-200">
+                            <ArrowLeft className="h-6 w-6"/>
+                        </Link>
+                        <h1 className="text-4xl font-bold text-gray-900 mb-4 md:mb-0">{recipe.title}</h1>
+                    </div>
                     <div className="flex space-x-4">
                         <button
                             onClick={() => navigate(`/recipe/edit/${recipe._id}`)}
                             className={`p-2 ${isAuthor ? "text-blue-600 hover:text-blue-700" : "invisible"} transition-colors cursor-pointer`}
                         >
-                            <Edit size={20} />
+                            <Edit size={20}/>
                         </button>
                         <button
                             onClick={handleDelete}
                             className={`p-2 ${isAuthor ? "text-red-600 hover:text-red-700" : "invisible"} transition-colors cursor-pointer`}
                         >
-                            <Trash2 size={20} />
+                            <Trash2 size={20}/>
                         </button>
                     </div>
                 </div>
@@ -107,26 +112,21 @@ const RecipeDetail = () => {
 
                         <div className="grid grid-cols-2 gap-4 mb-6">
                             <div className="flex items-center text-gray-600">
-                                <Clock size={16} className="mr-2" />
+                                <Clock size={16} className="mr-2"/>
                                 <span>{recipe.cookingTime || "N/A"} minut</span>
                             </div>
                             <div className="flex items-center text-gray-600">
-                                <Flame size={16} className="mr-2" />
+                                <Flame size={16} className="mr-2"/>
                                 <span>{recipe.difficultyLevel}</span>
                             </div>
                             <div className="flex items-center text-gray-600">
-                                <Utensils size={16} className="mr-2" />
+                                <Utensils size={16} className="mr-2"/>
                                 <span>{recipe.category}</span>
                             </div>
                             <div className="flex items-center text-gray-600">
-                                <Users size={16} className="mr-2" />
+                                <Users size={16} className="mr-2"/>
                                 <span>Publiczny: {recipe.isPublic ? "Tak" : "Nie"}</span>
                             </div>
-                        </div>
-
-                        <div className="mb-8">
-                            <h2 className="text-2xl font-semibold text-gray-900 mb-3">Autor: {recipe.authorId?.username || "N/A"}</h2>
-                            <p className="text-sm text-gray-500">Dodano: {new Date(recipe.createdAt).toLocaleDateString()}</p>
                         </div>
 
                         <div className="mb-8">
@@ -153,10 +153,13 @@ const RecipeDetail = () => {
 
                 <div className="mt-6 flex justify-end">
                     <button
-                        className="flex items-center text-indigo-600 hover:text-indigo-700 transition-colors duration-200 cursor-pointer"
+                        className="flex-col justify-center text-indigo-600 hover:text-indigo-700 transition-colors duration-200"
                         aria-label="Udostępnij przepis"
                     >
-                        <Share2 size={16} className="mr-1" /> Udostępnij
+                        <div className="flex items-center space-x-2">
+                            <Users size={16} className="mr-1"/> Autor: {recipe.authorId.username}
+                        </div>
+                        <p className="text-sm text-gray-500">Dodano: {new Date(recipe.createdAt).toLocaleDateString()}</p>
                     </button>
                 </div>
             </div>
