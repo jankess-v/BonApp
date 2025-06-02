@@ -8,6 +8,7 @@ import './App.css'
 import PublicRecipes from "./pages/PublicRecipes.jsx";
 import AddRecipe from "./pages/AddRecipe.jsx";
 import RecipeDetail from "./pages/RecipeDetail.jsx";
+import EditRecipe from "./pages/EditRecipe.jsx";
 
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
                         <Route path="/recipes" element={<PublicRecipes />} />
                         <Route path="/add-recipe" element={<AddRecipe />} />
                         <Route path="/recipe/:id" element={<RecipeDetail />} />
+                        <Route path="recipe/edit/:id" element={<EditRecipe />} />
                         <Route path="/" element={<Navigate to="/home" replace />} />
                     </Routes>
                     <Toaster

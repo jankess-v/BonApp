@@ -12,7 +12,8 @@ router.get("/myRecipes", auth, getUserRecipes);
 router.get("/:id", getRecipe);
 router.post("/", auth, upload.single("image"), handleMulterError, uploadImageToGCS, createRecipe);
 // router.post("/", auth, createRecipe)
-router.put("/recipe/edit/:id", auth, upload.single("image"), handleMulterError, uploadImageToGCS, updateRecipe)
+// router.put("/recipe/edit/:id", auth, upload.single("image"), handleMulterError, uploadImageToGCS, updateRecipe)
+router.put("/edit/:id", auth, updateRecipe)
 router.delete("/:id", auth, deleteRecipe);
 
 module.exports = router;

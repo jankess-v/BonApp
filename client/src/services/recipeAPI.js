@@ -3,7 +3,7 @@ import api from "./api"
 export const recipeAPI = {
     // Pobieranie przepisów użytkownika
     getUserRecipes: async (params = {}) => {
-        const response = await api.get("/recipes/my", { params })
+        const response = await api.get("/recipes/myRecipes", { params })
         return response.data
     },
 
@@ -27,7 +27,7 @@ export const recipeAPI = {
 
     // Aktualizacja przepisu
     updateRecipe: async (id, recipeData) => {
-        const response = await api.put(`/recipes/${id}`, recipeData)
+        const response = await api.put(`/recipes/edit/${id}`, recipeData)
         return response.data
     },
 
