@@ -15,7 +15,6 @@ const EditRecipe = () => {
     const {isAuthenticated} = useAuth();
     const {id} = useParams();
 
-    // const [recipe, setRecipe] = useState(null);
     const [ingredients, setIngredients] = useState([{name: "", quantity: "", unit: "szt"}]);
     const [instructions, setInstructions] = useState([""]);
     const [recipeImage, setRecipeImage] = useState(null);
@@ -38,7 +37,6 @@ const EditRecipe = () => {
                 const data = response.data.recipe
 
                 // console.log(data)
-
 
                 setIngredients(data.ingredients)
                 setInstructions(data.instructions)
