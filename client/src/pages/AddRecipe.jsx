@@ -1,6 +1,6 @@
-import { useState } from "react";
+import {useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
-import { useForm } from "react-hook-form";
+import {useForm} from "react-hook-form";
 import {
     ChefHat,
     Clock,
@@ -12,22 +12,28 @@ import {
     EyeOff, ArrowLeft,
 } from "lucide-react";
 import toast from "react-hot-toast";
-import { recipeAPI } from "../services/recipeAPI";
-import { RECIPE_CATEGORIES, DIFFICULTY_LEVELS } from "../constants/recipeData";
+import {recipeAPI} from "../services/recipeAPI";
+import {RECIPE_CATEGORIES, DIFFICULTY_LEVELS} from "../constants/recipeData";
 import IngredientInput from "../components/recipe/IngredientInput";
 import InstructionInput from "../components/recipe/InstructionInput";
 import ImageUpload from "../components/recipe/ImageUpload";
+import {useAuth} from "../context/AuthContext.jsx";
 
 const AddRecipe = () => {
     const navigate = useNavigate();
-    const [ingredients, setIngredients] = useState([{ name: "", quantity: "", unit: "szt" }]);
+    const [ingredients, setIngredients] = useState([{name: "", quantity: "", unit: "szt"}]);
     const [instructions, setInstructions] = useState([""]);
     const [recipeImage, setRecipeImage] = useState(null);
+    const {isAuthenticated} = useAuth();
+
+    if(!isAuthenticated) {
+        navigate("/login");
+    }
 
     const {
         register,
         handleSubmit,
-        formState: { errors },
+        formState: {errors},
     } = useForm({
         defaultValues: {
             title: "",
@@ -88,8 +94,9 @@ const AddRecipe = () => {
                 {/* Header */}
                 <div className="text-center animate-fade-in">
                     <div className="flex justify-center items-center relative">
-                        <Link to="/home" className="absolute left-0 top-0 text-gray-500 hover:text-gray-700 transition-colors duration-200">
-                            <ArrowLeft className="h-6 w-6" />
+                        <Link to="/recipes"
+                              className="absolute left-0 top-0 text-gray-500 hover:text-gray-700 transition-colors duration-200">
+                            <ArrowLeft className="h-6 w-6"/>
                         </Link>
 
                         <div className="flex flex-col items-center">
@@ -98,7 +105,7 @@ const AddRecipe = () => {
                                     to="/home"
                                     className="text-gray-500 hover:text-gray-600 transition-colors duration-200"
                                 >
-                                    <ChefHat className="w-8 h-8 text-white hover:animate-pulse" />
+                                    <ChefHat className="w-8 h-8 text-white hover:animate-pulse"/>
                                 </Link>
                             </div>
                             <h2 className="text-3xl font-bold text-gray-900 mt-4">Dodaj nowy przepis</h2>
@@ -198,12 +205,12 @@ const AddRecipe = () => {
                             </label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <Clock className="h-5 w-5 text-gray-400" />
+                                    <Clock className="h-5 w-5 text-gray-400"/>
                                 </div>
                                 <input
                                     {...register("cookingTime", {
-                                        min: { value: 1, message: "Czas musi być większy niż 0" },
-                                        max: { value: 1440, message: "Czas nie może przekraczać 24 godzin" },
+                                        min: {value: 1, message: "Czas musi być większy niż 0"},
+                                        max: {value: 1440, message: "Czas nie może przekraczać 24 godzin"},
                                     })}
                                     type="number"
                                     className={`block w-full pl-10 pr-3 py-2 border rounded-md focus:outline-none placeholder:text-gray-500 text-black ${
@@ -246,13 +253,13 @@ const AddRecipe = () => {
                     </div>
 
                     {/* Składniki */}
-                    <IngredientInput ingredients={ingredients} onChange={setIngredients} />
+                    <IngredientInput ingredients={ingredients} onChange={setIngredients}/>
 
                     {/* Instrukcje */}
-                    <InstructionInput instructions={instructions} onChange={setInstructions} />
+                    <InstructionInput instructions={instructions} onChange={setInstructions}/>
 
                     {/* Zdjęcie */}
-                    <ImageUpload image={recipeImage} onChange={setRecipeImage} />
+                    <ImageUpload image={recipeImage} onChange={setRecipeImage}/>
 
                     {/* Ustawienia widoczności */}
                     <div className="flex items-center">
