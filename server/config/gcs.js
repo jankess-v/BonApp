@@ -42,6 +42,7 @@ const uploadToGCS = async (buffer, fileName, mimetype) => {
                 cacheControl: "public, max-age=31536000", // Cache na rok
             },
             public: true, // Plik będzie publicznie dostępny
+            // predefinedAcl: 'uniform'
         })
 
         return new Promise((resolve, reject) => {

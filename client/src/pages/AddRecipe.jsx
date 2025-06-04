@@ -26,10 +26,6 @@ const AddRecipe = () => {
     const [recipeImage, setRecipeImage] = useState(null);
     const {isAuthenticated} = useAuth();
 
-    if(!isAuthenticated) {
-        navigate("/login");
-    }
-
     const {
         register,
         handleSubmit,
@@ -46,6 +42,10 @@ const AddRecipe = () => {
     });
 
     const onSubmit = async (data) => {
+        if(!isAuthenticated) {
+            navigate("/login");
+        }
+
         try {
             // Walidacja składników
             const validIngredients = ingredients.filter(
@@ -71,9 +71,30 @@ const AddRecipe = () => {
                     quantity: Number.parseFloat(ing.quantity),
                 })),
                 instructions: validInstructions,
-                image: recipeImage,
+                // image: recipeImage,
                 cookingTime: data.cookingTime ? Number.parseInt(data.cookingTime) : undefined,
             };
+
+            if(recipeImage) {
+                const formData = new FormData();
+                formData.append("image", recipeImage)
+
+                const response = await fetch("http://localhost:3000/api/images/recipes", {
+                    method: "POST",
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                    body: formData,
+                });
+
+                if(!response.ok) {
+                    console.log(response);
+                    console.error("Error uploading image");
+                    throw new Error("Error uploading image");
+                }
+                const result = await response.json()
+                recipeData.image = result.data.image
+            }
 
             const response = await recipeAPI.createRecipe(recipeData);
             if (response.success) {
@@ -259,7 +280,7 @@ const AddRecipe = () => {
                     <InstructionInput instructions={instructions} onChange={setInstructions}/>
 
                     {/* Zdjęcie */}
-                    <ImageUpload image={recipeImage} onChange={setRecipeImage}/>
+                    <ImageUpload image={recipeImage} setRecipeImage={setRecipeImage}/>
 
                     {/* Ustawienia widoczności */}
                     <div className="flex items-center">
