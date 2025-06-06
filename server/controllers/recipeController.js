@@ -72,7 +72,6 @@ const getRecipe = async (req, res) => {
             })
         }
 
-
         // // Sprawdzenie czy użytkownik ma dostęp do przepisu
         // if (recipe.authorId._id.toString() !== req.user._id && !recipe.isPublic) {
         //     return res.status(403).json({

@@ -47,6 +47,10 @@ export const authAPI = {
         const response = await api.post('/auth/login', credentials)
         return response.data
     },
+    verifyToken: async (token) => {
+        const response = await api.post('/auth/verifyToken', token)
+        return response.data
+    }
 }
 
 export default api;

@@ -166,9 +166,12 @@ const updateRecipeImage = async (req, res) => {
             }
 
             if (recipe.image && recipe.image.gcsFileName) {
-                await deleteFromGCS(recipe.image.gcsFileName);
-                recipe.image = undefined
-                await recipe.save()
+                try {
+                    await deleteFromGCS(recipe.image.gcsFileName)
+                    recipe.image = null
+                } catch (error) {
+                    console.error("Error deleting image from GCS:", error)
+                }
             }
         }
 

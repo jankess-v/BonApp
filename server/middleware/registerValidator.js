@@ -1,5 +1,3 @@
-// validators/registerValidator.js
-
 const validator = require('validator');
 
 const registerValidator = (req, res, next) => {

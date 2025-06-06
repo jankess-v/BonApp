@@ -1,4 +1,5 @@
 const User = require("../models/User")
+const jwt = require('jsonwebtoken');
 require('dotenv').config({ path: '../.env' });
 
 const register = async (req, res) => {
@@ -101,4 +102,41 @@ const login = async (req, res) => {
     }
 }
 
-module.exports = {register, login};
+const verifyToken = async (req, res) => {
+    try {
+        const authHeader = req.header("Authorization")
+
+        if (!authHeader || !authHeader.startsWith("Bearer ")) {
+            return res.status(401).json({
+                success: false,
+                message: "Dostęp zabroniony. Brak tokena.",
+            })
+        }
+
+        const token = authHeader.substring("Bearer ")
+
+        const decoded = jwt.verify(token, process.env.JWT_KEY);
+
+        const user = await User.findById(decoded._id)
+
+        if(!user) {
+            res.status(401).json({
+                success: false,
+                message: "Token wygasł"
+            })
+        }
+
+        res.status(200).json({
+            success: true,
+            data: user,
+        })
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Internal server error",
+        })
+    }
+}
+
+module.exports = {register, login, verifyToken};

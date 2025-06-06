@@ -36,7 +36,7 @@ const EditRecipe = () => {
                 const response = await recipeAPI.getRecipe(id);
                 const data = response.data.recipe
 
-                console.log(data)
+                // console.log(data)
 
                 setIngredients(data.ingredients)
                 setInstructions(data.instructions)

@@ -4,12 +4,17 @@ import {Edit, Trash2, Clock, Users, Utensils, Flame, ArrowLeft} from "lucide-rea
 import {recipeAPI} from "../services/recipeAPI"
 
 import Navbar from "../components/Navbar.jsx";
+import {useAuth} from "../context/AuthContext.jsx";
 
 const RecipeDetail = () => {
     const [recipe, setRecipe] = useState(null)
     const [loading, setLoading] = useState(true)
     const {id} = useParams()
     const navigate = useNavigate()
+
+    const {user: authUser} = useAuth()
+
+    // console.log(authUser._id)
 
     useEffect(() => {
         const fetchRecipe = async () => {
@@ -43,10 +48,14 @@ const RecipeDetail = () => {
         );
     }
     let isAuthor = false;
-    const user = localStorage.getItem("user");
-    if (user) {
-        const parsedUser = JSON.parse(user);
-        isAuthor = parsedUser._id === recipe.authorId._id;
+    // const user = localStorage.getItem("user");
+    // if (user) {
+    //     const parsedUser = JSON.parse(user);
+    //     isAuthor = parsedUser._id === recipe.authorId._id;
+    // }
+
+    if(authUser?._id === recipe.authorId._id) {
+        isAuthor = true
     }
 
     const handleDelete = async () => {
