@@ -86,11 +86,11 @@ const EditRecipe = () => {
                     quantity: Number.parseFloat(ing.quantity),
                 })),
                 instructions: validInstructions,
-                // image: recipeImage,
+                image: recipeImage,
                 cookingTime: data.cookingTime ? Number.parseInt(data.cookingTime) : undefined,
             };
 
-            if(recipeImage) {
+            if(recipeImage && recipeImage instanceof File) {
                 const formData = new FormData();
                 formData.append("image", recipeImage)
 
@@ -109,8 +109,6 @@ const EditRecipe = () => {
                 }
                 const result = await response.json()
                 recipeData.image = result.data.image
-            } else {
-                recipeData.image = null
             }
 
             const response = await recipeAPI.updateRecipe(id, recipeData);

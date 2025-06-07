@@ -1,7 +1,7 @@
-import {Link, useNavigate, useParams} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {useAuth} from "../context/AuthContext.jsx";
-import {ChefHat, Clock, Eye, EyeOff} from "lucide-react";
+import {ChefHat, Eye, EyeOff} from "lucide-react";
 import Navbar from "../components/Navbar.jsx";
 import RecipeCard from "../components/recipe/RecipeCard.jsx";
 import {useForm} from "react-hook-form";
