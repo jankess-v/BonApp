@@ -14,6 +14,8 @@ const Profile = () => {
     const [loading, setLoading] = useState(true);
     const [showCurrentPassword, setShowCurrentPassword] = useState(false);
     const [showNewPassword, setShowNewPassword] = useState(false);
+    const [users, setUsers] = useState([]);
+    const [loadingUsers, setLoadingUsers] = useState(true);
 
     const {
         register,
@@ -54,6 +56,29 @@ const Profile = () => {
             }
         };
 
+        const fetchAllUsers = async () => {
+            try {
+                const response = await fetch("http://localhost:3000/api/users/all", {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                })
+
+                if(response.ok) {
+                    const data = await response.json();
+                    setUsers(data.data);
+                }
+            } catch (error) {
+                console.error(error.message);
+            } finally {
+                setLoadingUsers(false);
+            }
+        }
+
+        if(user.role === 'admin') {
+            fetchAllUsers();
+        }
+
         fetchUserRecipes();
     }, [navigate, isAuthenticated]);
 
@@ -82,6 +107,29 @@ const Profile = () => {
         }
     }
 
+    const handleDeleteUser = async (id) => {
+        if (!window.confirm("Czy na pewno chcesz usunąć tego użytkownika?")) return;
+
+        try {
+            const response = await fetch(`http://localhost:3000/api/users/${id}`, {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
+            })
+
+            const result = await response.json();
+
+            if(result.success) {
+                toast.success("Użytkownik został usunięty")
+                setUsers(users.filter(u => u._id !== id))
+            }
+        } catch (error) {
+            console.error(error.message);
+            toast.error("Błąd przy usuwaniu użytkownika")
+        }
+    }
+
     const handleRecipeClick = (recipe) => {
         navigate(`/recipe/${recipe._id}`)
     }
@@ -97,7 +145,6 @@ const Profile = () => {
             </div>
         );
     }
-
 
     return (
         <div className="min-h-screen bg-gray-50 mb-8">
@@ -241,6 +288,7 @@ const Profile = () => {
                 </div>
 
                 {/* Lista przepisów */}
+                {user.role !== 'admin' ? (
                 <div>
                     <h2 className="text-2xl font-semibold text-gray-900 mb-4">Twoje przepisy</h2>
                     {recipes.length === 0 ? (
@@ -257,6 +305,51 @@ const Profile = () => {
                             </>
                         ))}
                 </div>
+                ) : (
+                    <div className="mt-12">
+                        <h2 className="text-2xl font-semibold text-gray-900 mb-4">Lista użytkowników</h2>
+                        {loadingUsers ? (
+                            <p className="text-gray-500">Ładowanie użytkowników...</p>
+                        ) : users.length === 0 ? (
+                            <p className="text-gray-500">Brak zarejestrowanych użytkowników.</p>
+                        ) : (
+                            <div className="overflow-x-auto">
+                                <table className="min-w-full border text-sm text-left text-gray-600">
+                                    <thead className="bg-gray-100 text-gray-700 uppercase">
+                                    <tr>
+                                        <th className="px-4 py-2">Imię</th>
+                                        <th className="px-4 py-2">Nazwisko</th>
+                                        <th className="px-4 py-2">Email</th>
+                                        <th className="px-4 py-2">Utworzony</th>
+                                        <th className="px-4 py-2">Rola</th>
+                                        <th className="px-4 py-2">Akcje</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {users.map((u) => (
+                                        <tr key={u._id} className="border-t">
+                                            <td className="px-4 py-2">{u.firstName}</td>
+                                            <td className="px-4 py-2">{u.lastName}</td>
+                                            <td className="px-4 py-2">{u.email}</td>
+                                            <td className="px-4 py-2">{new Date(u.createdAt).toLocaleDateString()}</td>
+                                            <td className="px-4 py-2">{u.role}</td>
+                                            <td className="px-4 py-2">
+                                                <button
+                                                    onClick={() => handleDeleteUser(u._id)}
+                                                    className="text-red-600 hover:underline text-sm hover:cursor-pointer"
+                                                >
+                                                    Usuń
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
+                    </div>
+                )
+                }
             </div>
         </div>
     );

@@ -4,6 +4,7 @@ const connectDB = require("./config/db");
 const authRoutes = require("./routes/auth");
 const recipeRoutes = require("./routes/recipes");
 const imageRoutes = require("./routes/images");
+const userRoutes = require("./routes/user");
 const {initializeBucket} = require("./config/gcs");
 require('dotenv').config({ path: '../.env' });
 
@@ -22,5 +23,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/auth", authRoutes);
 app.use("/api/recipes", recipeRoutes);
 app.use("/api/images", imageRoutes);
+app.use("/api/users", userRoutes);
 
 app.listen(port, () => console.log(`Listening on port http://localhost:${port}`));

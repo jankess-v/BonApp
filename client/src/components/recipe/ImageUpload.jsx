@@ -1,5 +1,3 @@
-"use client"
-
 import {useState, useRef} from "react"
 import {X, ImageIcon} from "lucide-react"
 import toast from "react-hot-toast"
