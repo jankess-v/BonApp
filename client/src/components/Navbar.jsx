@@ -27,8 +27,8 @@ const Navbar = () => {
 
             <div className="hidden md:flex items-center gap-9 text-[#141414] text-xl font-medium">
                 <Link to="/recipes"><p className="cursor-pointer">Przepisy</p></Link>
-                <Link to="/pantry"><p className="cursor-pointer">Spiżarnia</p></Link>
-                <Link to="/shopping-list"><p className="cursor-pointer">Lista zakupów</p></Link>
+                {/*<Link to="/pantry"><p className="cursor-pointer">Spiżarnia</p></Link>*/}
+                {/*<Link to="/shopping-list"><p className="cursor-pointer">Lista zakupów</p></Link>*/}
             </div>
 
             {/*Przyciski*/}

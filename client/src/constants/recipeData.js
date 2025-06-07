@@ -11,6 +11,19 @@ export const RECIPE_CATEGORIES = [
     "Sosy i dodatki",
 ]
 
+export const RECIPE_CATEGORIES_HOME = [
+    { name: "Śniadanie", image: '/src/assets/breakfast.jpg'},
+    { name: "Zupy", image: "/src/assets/soups.jpg" },
+    { name: "Dania główne - mięsne", image: "/src/assets/meat-dishes.jpg" },
+    { name: "Dania główne - rybne", image: "/src/assets/fish-dishes.jpg" },
+    { name: "Dania główne - wegetariańskie", image: "/src/assets/vegetarian-dishes.jpeg" },
+    { name: "Sałatki", image: "/src/assets/salads.jpg" },
+    { name: "Desery", image: "/src/assets/desserts.jpg" },
+    { name: "Napoje", image: "/src/assets/drinks.jpg" },
+    { name: "Przekąski", image: "/src/assets/snacks.jpg" },
+    { name: "Sosy i dodatki", image: "/src/assets/sauces.jpg" }
+]
+
 export const DIFFICULTY_LEVELS = [
     { value: "łatwy", label: "Łatwy", color: "text-green-600" },
     { value: "średni", label: "Średni", color: "text-yellow-600" },

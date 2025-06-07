@@ -10,7 +10,8 @@ const QuickActions = () => {
                 Szybkie akcje
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/*<div className="grid grid-cols-1 md:grid-cols-3 gap-6">*/}
+            <div className="flex items-center justify-center">
                 <ActionCard
                     icon="📝"
                     title="Dodaj przepis"
@@ -18,19 +19,19 @@ const QuickActions = () => {
                     to={isAuthenticated ? "/add-recipe" : "/login"}
                 />
 
-                <ActionCard
-                    icon="🥫"
-                    title="Sprawdź spiżarnię"
-                    description={isAuthenticated ? "Zobacz co masz w domu" : "Zaloguj się, aby dodać przepis"}
-                    to={isAuthenticated ? "/pantry" : "/login"}
-                />
+                {/*<ActionCard*/}
+                {/*    icon="🥫"*/}
+                {/*    title="Sprawdź spiżarnię"*/}
+                {/*    description={isAuthenticated ? "Zobacz co masz w domu" : "Zaloguj się, aby dodać przepis"}*/}
+                {/*    to={isAuthenticated ? "/pantry" : "/login"}*/}
+                {/*/>*/}
 
-                <ActionCard
-                    icon="🛒"
-                    title="Lista zakupów"
-                    description={isAuthenticated ? "Planuj swoje zakupyu" : "Zaloguj się, aby dodać przepis"}
-                    to={isAuthenticated ? "/shopping-list" : "/login"}
-                />
+                {/*<ActionCard*/}
+                {/*    icon="🛒"*/}
+                {/*    title="Lista zakupów"*/}
+                {/*    description={isAuthenticated ? "Planuj swoje zakupyu" : "Zaloguj się, aby dodać przepis"}*/}
+                {/*    to={isAuthenticated ? "/shopping-list" : "/login"}*/}
+                {/*/>*/}
             </div>
         </section>
     );
