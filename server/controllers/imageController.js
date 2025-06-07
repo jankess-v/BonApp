@@ -149,7 +149,7 @@ const updateRecipeImage = async (req, res) => {
         if(recipeId) {
             // Sprawdzenie czy przepis istnieje i należy do użytkownika
             const recipe = await Recipe.findById(recipeId)
-            console.log(recipeId)
+            // console.log(recipeId)
 
             if (!recipe) {
                 return res.status(404).json({
@@ -183,7 +183,7 @@ const updateRecipeImage = async (req, res) => {
         // Upload nowego zdjęcia
         const uploadResult = await uploadToGCS(req.file.buffer, gcsFileName, req.file.mimetype)
 
-        console.log("uploadResult", uploadResult)
+        // console.log("uploadResult", uploadResult)
 
         const imageData = {
             filename: gcsFileName,
