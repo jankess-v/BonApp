@@ -9,6 +9,7 @@ import PublicRecipes from "./pages/PublicRecipes.jsx";
 import AddRecipe from "./pages/AddRecipe.jsx";
 import RecipeDetail from "./pages/RecipeDetail.jsx";
 import EditRecipe from "./pages/EditRecipe.jsx";
+import Profile from "./pages/Profile.jsx";
 
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
                         <Route path="/login" element={<Login />} />
                         <Route path="/register" element={<Register/>}/>
                         <Route path="/home" element={<Home />} />
+                        <Route path="/profile" element={<Profile />} />
                         <Route path="/recipes" element={<PublicRecipes />} />
                         <Route path="/add-recipe" element={<AddRecipe />} />
                         <Route path="/recipe/:id" element={<RecipeDetail />} />

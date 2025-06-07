@@ -1,5 +1,6 @@
 const User = require("../models/User")
 const jwt = require('jsonwebtoken');
+const bcrypt = require("bcrypt");
 require('dotenv').config({ path: '../.env' });
 
 const register = async (req, res) => {
@@ -139,4 +140,85 @@ const verifyToken = async (req, res) => {
     }
 }
 
-module.exports = {register, login, verifyToken};
+const getUser = async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id).select("-password")
+
+        if(!user) {
+            return res.status(401).json({
+                success: false,
+                message: "Nie znaleziono użytkownika"
+            })
+        }
+
+        res.status(200).json({
+            success: true,
+            data: user,
+        })
+    } catch (error) {
+        console.error("Błąd pobierania danych użytkownika:", error);
+        res.status(500).json({
+            success: false,
+            message: "Wystąpił błąd podczas pobierania danych użytkownika",
+        });
+    }
+}
+
+const changeUserPassword = async (req, res) => {
+    try {
+        if (!req.body) {
+            return res.status(400).json({
+                success: false,
+                message: "Brak danych wejściowych",
+            });
+        }
+        const currentPassword = req.body.currentPassword
+        const newPassword = req.body.newPassword
+        const confirmPassword = req.body.confirmPassword
+        const userId = req.user._id
+        const user = await User.findById(userId)
+
+        if(!user) {
+            return res.status(404).json({
+                success: false,
+                message: "Użytkownik nie istnieje"
+            })
+        }
+
+        if(newPassword !== confirmPassword) {
+            return res.status(401).json({
+                success: false,
+                message: "Nowe hasła nie są identyczne"
+            })
+        }
+
+        const isCorrect = await bcrypt.compare(currentPassword, user.password)
+        if(!isCorrect) {
+            return res.status(401).json({
+                success: false,
+                message: "Nieprawidłowe hasło"
+            })
+        }
+
+        const isEqual = await bcrypt.compare(newPassword, user.password)
+        if(isEqual) {
+            return res.status(401).json({
+                success: false,
+                message: "Nowe hasło musi być inne od obecnego"
+            })
+        }
+
+        user.password = newPassword;
+        await user.save()
+
+        res.status(200).json({
+            success: true,
+            message: "Hasło zmienione pomyslnie"
+        })
+    } catch (error) {
+        console.error("Błąd podczas zmiany hasła:", error)
+        res.status(500).json({ success: false, message: "Wystąpił błąd podczas zmiany hasła." })
+    }
+}
+
+module.exports = {register, login, getUser, changeUserPassword};

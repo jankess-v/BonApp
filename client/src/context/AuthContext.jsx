@@ -10,18 +10,32 @@ export const AuthProvider = ({children}) => {
     const [user, setUser] = useState(null);
 
     useEffect( ()  => {
-        const token = localStorage.getItem("token");
-        // setIsAuthenticated(!!token);
-        if(token) {
-            try {
-                const decoded = jwt.decode(token);
-                setUser(decoded);
-                setIsAuthenticated(true);
-            } catch (error) {
-                console.error("Błąd dekodowania tokenu", err);
-                localStorage.removeItem("token");
+        const checkAuth = async () => {
+            const token = localStorage.getItem("token");
+            if (token) {
+                try {
+                    const response = await fetch(`http://localhost:3000/api/auth/me`, {
+                        method: "GET",
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    })
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        setUser(data.data)
+                        setIsAuthenticated(true);
+                    } else {
+                        console.log("Token jest obecny, ale użytkownik nie istnieje.");
+                        localStorage.removeItem("token");
+                    }
+                } catch (error) {
+                    console.error("Błąd sprawdzania autoryzacji:", error);
+                    localStorage.removeItem("token");
+                }
             }
         }
+        checkAuth()
     }, []);
 
     const login = async (credentials) => {
@@ -32,8 +46,10 @@ export const AuthProvider = ({children}) => {
                 localStorage.setItem("token", token)
                 // localStorage.setItem("user", JSON.stringify(user))
 
-                const decoded = jwtDecode(token)
-                setUser(decoded)
+                // const decoded = jwtDecode(token)
+                // setUser(decoded)
+
+                setUser(user);
                 setIsAuthenticated(true)
 
                 toast.success("Zalogowano pomyślnie!")
@@ -54,8 +70,10 @@ export const AuthProvider = ({children}) => {
                 localStorage.setItem("token", token)
                 // localStorage.setItem("user", JSON.stringify(user))
 
-                const decoded = jwtDecode(token)
-                setUser(decoded)
+                // const decoded = jwtDecode(token)
+                // setUser(decoded)
+
+                setUser(user);
                 setIsAuthenticated(true)
 
                 toast.success("Zarejestrowano pomyślnie!")

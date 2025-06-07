@@ -28,7 +28,6 @@ const RecipeCard = ({ recipe }) => {
 
         <div className="flex justify-between items-center text-sm text-gray-500">
           <span>⏱️ {recipe.cookingTime}</span>
-          <span>👥 {recipe.servings} porcji</span>
         </div>
 
         <button className="w-full mt-4 px-4 py-2 bg-gray-50 text-gray-700 rounded-md hover:bg-gray-100 transition-colors duration-200 text-sm font-medium">

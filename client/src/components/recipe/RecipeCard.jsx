@@ -1,5 +1,3 @@
-"use client"
-
 import { Clock, ChefHat } from "lucide-react"
 import { DIFFICULTY_LEVELS } from "../../constants/recipeData"
 import RecipeImage from "./RecipeImage"
