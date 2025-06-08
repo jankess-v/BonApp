@@ -11,7 +11,7 @@ const Home = () => {
         <div className="flex h-full grow flex-col">
             <Navbar/>
             <HomeBanner/>
-            <div className="w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="w-8xl mx-auto px-4 sm:px-6 lg:px-8">
                 <QuickActions/>
                 <RecommendedCategories />
             </div>

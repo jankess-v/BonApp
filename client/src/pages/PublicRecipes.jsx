@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react"
-import { useNavigate } from "react-router-dom"
+import {useLocation, useNavigate} from "react-router-dom"
 import { ChefHat, Utensils } from "lucide-react"
 import toast from "react-hot-toast"
 
@@ -12,6 +12,7 @@ import Navbar from "../components/Navbar.jsx";
 
 const PublicRecipes = () => {
     const navigate = useNavigate()
+    const location = useLocation()
     const [recipes, setRecipes] = useState([])
     const [searchTerm, setSearchTerm] = useState("")
     const [filters, setFilters] = useState({
@@ -28,6 +29,26 @@ const PublicRecipes = () => {
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("")
 
     useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        const categoryParam = params.get("category");
+
+        if (categoryParam) {
+            setFilters((prev) => {
+                const updatedFilters = {
+                    ...prev,
+                    category: categoryParam,
+                };
+                // Od razu fetchujemy z nowymi filtrami
+                fetchRecipes(1, updatedFilters);
+                return updatedFilters;
+            });
+        } else {
+            fetchRecipes(1, filters);
+        }
+    }, [location.search]);
+
+
+    useEffect(() => {
         const timer = setTimeout(() => {
             setDebouncedSearchTerm(searchTerm)
         }, 500)
@@ -35,45 +56,41 @@ const PublicRecipes = () => {
         return () => clearTimeout(timer)
     }, [searchTerm])
 
-    const fetchRecipes = useCallback(
-        async (page = 1) => {
-            try {
+    const fetchRecipes = async (page = 1, customFilters = filters) => {
+        try {
+            const params = {
+                page,
+                limit: 12,
+            };
 
-                const params = {
-                    page,
-                    limit: 12,
-                }
-
-                if (debouncedSearchTerm) {
-                    params.search = debouncedSearchTerm
-                }
-
-                if (filters.category !== "all") {
-                    params.category = filters.category
-                }
-
-                if (filters.difficulty !== "all") {
-                    params.difficulty = filters.difficulty
-                }
-
-                const response = await recipeAPI.getPublicRecipes(params)
-
-                if (response.success) {
-                    setRecipes(response.data.recipes)
-                    setPagination(response.data.pagination)
-                }
-            } catch (error) {
-                console.error("Error fetching recipes:", error)
-                toast.error("Błąd podczas ładowania przepisów")
+            if (debouncedSearchTerm) {
+                params.search = debouncedSearchTerm;
             }
-        },
-        [debouncedSearchTerm, filters],
-    )
 
-    // Fetch recipes when filters or search change
+            if (customFilters.category !== "all") {
+                params.category = customFilters.category;
+            }
+
+            if (customFilters.difficulty !== "all") {
+                params.difficulty = customFilters.difficulty;
+            }
+
+            const response = await recipeAPI.getPublicRecipes(params);
+
+            if (response.success) {
+                setRecipes(response.data.recipes);
+                setPagination(response.data.pagination);
+            }
+        } catch (error) {
+            console.error("Error fetching recipes:", error);
+            toast.error("Błąd podczas ładowania przepisów");
+        }
+    };
+
+
     useEffect(() => {
         fetchRecipes(1)
-    }, [fetchRecipes])
+    }, [filters, debouncedSearchTerm])
 
     const handlePageChange = (page) => {
         fetchRecipes(page)
@@ -148,15 +165,15 @@ const PublicRecipes = () => {
                         <span className="text-gray-500">({getResultsText()})</span>
                     </div>
 
-                    {/* Sort Options - Future enhancement */}
-                    <div className="hidden md:flex items-center space-x-2">
-                        <span className="text-sm text-gray-500">Sortuj:</span>
-                        <select className="text-sm border border-gray-300 rounded-md px-3 py-1 focus:ring-2 focus:ring-gray-500 focus:border-transparent">
-                            <option value="newest">Najnowsze</option>
-                            <option value="oldest">Najstarsze</option>
-                            <option value="name">Nazwa A-Z</option>
-                        </select>
-                    </div>
+                    {/* Sort Options */}
+                    {/*<div className="hidden md:flex items-center space-x-2">*/}
+                    {/*    <span className="text-sm text-gray-500">Sortuj:</span>*/}
+                    {/*    <select className="text-sm border border-gray-300 rounded-md px-3 py-1 focus:ring-2 focus:ring-gray-500 focus:border-transparent">*/}
+                    {/*        <option value="newest">Najnowsze</option>*/}
+                    {/*        <option value="oldest">Najstarsze</option>*/}
+                    {/*        <option value="name">Nazwa A-Z</option>*/}
+                    {/*    </select>*/}
+                    {/*</div>*/}
                 </div>
 
 

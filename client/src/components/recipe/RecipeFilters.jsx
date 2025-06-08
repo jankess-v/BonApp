@@ -1,5 +1,3 @@
-"use client"
-
 import { Filter, X } from "lucide-react"
 import { RECIPE_CATEGORIES, DIFFICULTY_LEVELS } from "../../constants/recipeData"
 
